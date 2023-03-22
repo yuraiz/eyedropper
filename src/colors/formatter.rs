@@ -344,6 +344,35 @@ impl ColorFormatter {
             precision = self.precision()
         )
     }
+
+    /// Format the color as glvec
+    pub fn glvec(&self) -> String {
+        custom_format!(
+            self.custom_format("custom-format-glvec"),
+            ("r", self.color.red as f32 / 255.0),
+            ("g", self.color.green as f32 / 255.0),
+            ("b", self.color.blue as f32 / 255.0),
+            ("a", self.color.alpha as f32 / 255.0)
+        );
+        match self.alpha_position {
+            // show alpha at the end (rgba)
+            AlphaPosition::End => format!(
+                "vec4({}, {}, {}, {})",
+                self.color.red as f32 / 255.0,
+                self.color.green as f32 / 255.0,
+                self.color.blue as f32 / 255.0,
+                self.color.alpha as f32 / 255.0
+            ),
+            // no alpha / there is no argb
+            _ => format!(
+                "vec3({}, {}, {})",
+                self.color.red as f32 / 255.0,
+                self.color.green as f32 / 255.0,
+                self.color.blue as f32 / 255.0
+            ),
+        }
+    }
+
     /// Format the color as hunter-lab.
     pub fn hunter_lab(&self) -> String {
         let (l, a, b) = self
